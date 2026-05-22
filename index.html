@@ -1,92 +1,1322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>International Crab Market Report – May 2026</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWMI — Global Salmon Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal-900: #0d1b2e;
+  --teal-800: #142a47;
+  --teal-700: #1e4070;
+  --teal-500: #2a6ead;
+  --teal-300: #5ba4d4;
+  --teal-100: #a8cfe8;
+  --teal-50:  #e3f0f8;
+  --coral:    #F0997B;
+  --coral-dk: #D85A30;
+  --purple:   #AFA9EC;
+  --amber:    #FAC775;
+  --amber-dk: #BA7517;
+  --red:      #E24B4A;
+  --blue:     #5ba4d4;
+  --green:    #4ecb8d;
+  --gray:     #888780;
+  --gray-lt:  #D3D1C7;
+  --font-ui:  'Syne', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+  --border:   0.5px solid #1e4070;
+}
+
+body {
+  background: #060d1a;
+  font-family: var(--font-ui);
+  color: var(--teal-50);
+  min-height: 100vh;
+  padding: 12px;
+}
+
+/* ── HEADER ── */
+.awmi-header {
+  background: var(--teal-900);
+  border-radius: 10px;
+  border: var(--border);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; border-bottom: var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 30px; height: 30px; border-radius: 6px;
+  background: var(--teal-500); display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.brand-name { font-size: 10px; color: var(--teal-100); letter-spacing: 0.08em; text-transform: uppercase; }
+.brand-title { font-size: 16px; font-weight: 600; color: var(--teal-50); letter-spacing: -0.01em; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.header-meta { text-align: right; }
+.meta-period { font-size: 11px; color: var(--teal-300); }
+.meta-email { font-size: 11px; color: var(--teal-300); margin-top: 1px; }
+.meta-email a { color: var(--teal-300); text-decoration: none; }
+.meta-update { font-size: 10px; color: var(--teal-700); margin-top: 1px; }
+.live-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal-500); margin-right: 4px; animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.35} }
+.hdr-actions { display: flex; gap: 6px; }
+.hdr-btn {
+  padding: 4px 10px; border-radius: 6px; border: var(--border);
+  background: transparent; color: var(--teal-100); font-size: 11px;
+  font-family: var(--font-ui); cursor: pointer; display: flex; align-items: center; gap: 4px;
+}
+.hdr-btn:hover { background: var(--teal-800); }
+
+/* ── Dashboard For Sale CTA ── */
+.for-sale-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #BA7517 0%, #D4881E 60%, #E8A830 100%);
+  border: 1px solid #E8A830;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(186,117,23,.5), 0 0 28px rgba(186,117,23,.2);
+  animation: sale-glow 2.5s ease-in-out infinite;
+  transition: transform .15s, box-shadow .15s;
+}
+.for-sale-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(186,117,23,.8), 0 0 40px rgba(186,117,23,.35);
+}
+@keyframes sale-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(186,117,23,.45), 0 0 24px rgba(186,117,23,.18); }
+  50%       { box-shadow: 0 0 18px rgba(186,117,23,.85), 0 0 42px rgba(186,117,23,.35); }
+}
+.for-sale-btn::after {
+  content: '';
+  position: absolute; top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  animation: shimmer 2.8s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{left:-60%} 50%{left:120%} }
+.for-sale-pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #0d1b2e; flex-shrink: 0;
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(4,52,44,.7); }
+  70%  { box-shadow: 0 0 0 7px rgba(4,52,44,0); }
+  100% { box-shadow: 0 0 0 0 rgba(4,52,44,0); }
+}
+.for-sale-icon { font-size: 16px; }
+.for-sale-text { display: flex; flex-direction: column; gap: 1px; }
+.for-sale-label {
+  font-size: 12px; font-weight: 700; color: #0d1b2e;
+  letter-spacing: 0.04em; line-height: 1; font-family: var(--font-ui);
+}
+.for-sale-sub {
+  font-size: 9px; color: rgba(4,52,44,.75);
+  letter-spacing: 0.03em; line-height: 1; font-family: var(--font-ui);
+}
+.badge {
+  background: var(--amber-dk); color: #FAEEDA;
+  font-size: 9px; padding: 1px 6px; border-radius: 99px;
+}
+
+/* ticker */
+.ticker-bar { display: flex; background: var(--teal-800); }
+.ticker-label {
+  padding: 7px 12px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--teal-300); display: flex; align-items: center;
+  border-right: var(--border); white-space: nowrap;
+}
+.ticker-items { display: flex; flex: 1; }
+.ticker-item {
+  flex: 1; padding: 7px 14px; border-right: var(--border);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.ticker-item:last-child { border-right: none; }
+.t-name { font-size: 9px; color: var(--teal-700); }
+.t-price { font-family: var(--font-mono); font-size: 14px; color: var(--teal-50); }
+.t-cur { font-size: 9px; margin-right: 2px; }
+.t-chg { font-family: var(--font-mono); font-size: 10px; }
+.up   { color: var(--teal-300); }
+.down { color: var(--coral); }
+.flat { color: var(--gray); }
+
+/* nav */
+.nav-bar { display: flex; border-top: var(--border); background: var(--teal-900); }
+.nav-item {
+  padding: 8px 12px; font-size: 11px; color: var(--teal-700);
+  cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap;
+}
+.nav-item.active { color: var(--teal-100); border-bottom: 2px solid var(--teal-500); }
+.nav-item:hover { color: var(--teal-100); }
+.nav-spacer { flex: 1; }
+.conf-tag {
+  font-size: 9px; letter-spacing: 0.08em; color: var(--teal-700);
+  text-transform: uppercase; padding: 0 14px; display: flex; align-items: center; gap: 4px;
+}
+
+/* ── GRID ── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr 220px;
+  grid-template-rows: auto auto auto auto auto;
+  gap: 10px;
+}
+
+/* card base */
+.card {
+  background: var(--teal-900);
+  border: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.card-header {
+  padding: 8px 14px 6px;
+  border-bottom: var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-300); }
+.card-badge {
+  font-size: 9px; padding: 2px 8px; border-radius: 99px; font-family: var(--font-mono);
+}
+.card-body { padding: 12px 14px; }
+
+/* ── CONTAINER 2: PRICE CHART ── */
+.price-chart-card {
+  grid-column: 1 / -1;
+}
+.chart-wrap { position: relative; height: 140px; }
+
+/* ── CONTAINER 3: SUPPLY STATUS ── */
+.supply-card { grid-column: 1; }
+.big-stat { margin-bottom: 10px; }
+.big-num { font-family: var(--font-mono); font-size: 22px; color: var(--teal-50); }
+.big-unit { font-size: 11px; color: var(--teal-300); margin-left: 4px; }
+.big-label { font-size: 10px; color: var(--teal-700); margin-bottom: 2px; }
+.change-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-family: var(--font-mono); font-size: 10px; padding: 2px 7px;
+  border-radius: 99px; margin-top: 3px;
+}
+.pill-up { background: rgba(42,110,173,.20); color: var(--teal-300); }
+.pill-dn { background: rgba(240,153,123,.15); color: var(--coral); }
+.divider { border: none; border-top: var(--border); margin: 10px 0; }
+.tightness-row { display: flex; align-items: center; justify-content: space-between; }
+.tightness-val { font-family: var(--font-mono); font-size: 20px; color: var(--amber); }
+.tightness-label { font-size: 10px; color: var(--teal-700); }
+.tight-badge { font-size: 9px; color: var(--amber); background: rgba(186,117,23,.15); padding: 2px 8px; border-radius: 99px; }
+
+/* ── CONTAINER 4: SENTIMENT ── */
+.sentiment-card { grid-column: 2; }
+.sentiment-overall {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.bull-label { font-size: 18px; font-weight: 600; color: var(--teal-300); }
+.gauge-wrap { margin-bottom: 10px; }
+.gauge-bar {
+  height: 6px; background: var(--teal-800);
+  border-radius: 99px; overflow: hidden; margin: 4px 0;
+}
+.gauge-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #D85A30, #FAC775, #2a6ead); }
+.gauge-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--teal-700); }
+.score-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.score-num { font-family: var(--font-mono); font-size: 28px; color: var(--teal-100); }
+.score-sub { font-size: 10px; color: var(--teal-700); }
+.factor-list { display: flex; flex-direction: column; gap: 5px; }
+.factor-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--teal-100); }
+.factor-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.news-row { display: flex; justify-content: space-between; margin-top: 10px; border-top: var(--border); padding-top: 8px; }
+.news-stat { text-align: center; }
+.news-num { font-family: var(--font-mono); font-size: 14px; color: var(--teal-100); }
+.news-label { font-size: 9px; color: var(--teal-700); }
+
+/* ── CONTAINER 5: RISK ALERT ── */
+.risk-card { grid-column: 3; }
+.risk-overall {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 0 8px; border-bottom: var(--border); margin-bottom: 10px;
+}
+.risk-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--amber); display: flex; align-items: center; justify-content: center;
+}
+.risk-med { font-size: 9px; color: var(--amber); font-weight: 600; letter-spacing: 0.06em; }
+.risk-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.risk-key { font-size: 10px; color: var(--teal-300); }
+.risk-val { font-family: var(--font-mono); font-size: 11px; }
+.risk-bar-wrap { margin-top: 2px; }
+.risk-bar { height: 3px; border-radius: 99px; background: var(--teal-800); margin-top: 3px; overflow: hidden; }
+.risk-bar-fill { height: 100%; border-radius: 99px; }
+.r-amber { color: var(--amber); }
+.r-red   { color: var(--red); }
+.r-green { color: var(--teal-300); }
+.disease-types { font-size: 9px; color: var(--teal-700); margin-top: 2px; }
+
+/* ── CONTAINER 6: EXPORT MARKETS ── */
+.export-card { grid-column: 1; }
+.market-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; border-bottom: var(--border);
+}
+.market-item:last-child { border-bottom: none; }
+.m-flag { font-size: 9px; color: var(--teal-700); width: 20px; }
+.m-country { font-size: 11px; color: var(--teal-100); flex: 1; }
+.m-bar-wrap { flex: 1; }
+.m-bar { height: 3px; background: var(--teal-800); border-radius: 99px; overflow: hidden; margin-top: 3px; }
+.m-bar-fill { height: 100%; border-radius: 99px; background: var(--teal-500); }
+.m-vol { font-family: var(--font-mono); font-size: 10px; color: var(--teal-300); white-space: nowrap; }
+.m-chg { font-family: var(--font-mono); font-size: 10px; white-space: nowrap; margin-left: 4px; }
+.tariff-flag {
+  font-size: 8px; color: var(--amber-dk); background: rgba(186,117,23,.2);
+  padding: 1px 5px; border-radius: 3px;
+}
+
+/* ── CONTAINER 7: TRADE FLOW MAP ── */
+.trade-card { grid-column: 2; }
+.map-svg-wrap { width: 100%; }
+.map-legend { display: flex; gap: 12px; margin-top: 8px; }
+.leg-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--teal-700); }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── CONTAINER 8: FORWARD CURVE ── */
+.forward-card { grid-column: 3; }
+.curve-structure {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
+}
+.contango-badge {
+  font-size: 10px; color: var(--teal-300);
+  background: rgba(42,110,173,.20); padding: 3px 10px; border-radius: 99px;
+}
+.curve-items { display: flex; flex-direction: column; gap: 6px; }
+.curve-item { display: flex; align-items: center; justify-content: space-between; }
+.c-tenor { font-size: 10px; color: var(--teal-700); width: 28px; }
+.c-bar-wrap { flex: 1; margin: 0 8px; }
+.c-bar { height: 4px; background: var(--teal-800); border-radius: 99px; overflow: hidden; }
+.c-bar-fill { height: 100%; border-radius: 99px; background: var(--teal-500); }
+.c-price { font-family: var(--font-mono); font-size: 12px; color: var(--teal-50); white-space: nowrap; }
+.c-spread { font-family: var(--font-mono); font-size: 9px; color: var(--teal-300); }
+.spot-row { padding: 8px 0; border-bottom: var(--border); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.spot-label { font-size: 10px; color: var(--teal-700); }
+.spot-price { font-family: var(--font-mono); font-size: 13px; color: var(--teal-50); }
+
+/* ── CONTAINER 9: ENVIRONMENTAL / SEA LICE ── */
+.env-card { grid-column: 1; }
+.lice-regions { display: flex; flex-direction: column; gap: 8px; }
+.lice-region { display: flex; align-items: center; gap: 8px; }
+.lice-name { font-size: 10px; color: var(--teal-300); width: 42px; }
+.lice-bar-wrap { flex: 1; }
+.lice-bar { height: 5px; background: var(--teal-800); border-radius: 99px; overflow: hidden; }
+.lice-bar-fill { height: 100%; border-radius: 99px; }
+.lice-score { font-family: var(--font-mono); font-size: 11px; }
+.zone-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+.zone-box { text-align: center; padding: 6px 4px; border-radius: 6px; }
+.zone-num { font-family: var(--font-mono); font-size: 16px; font-weight: 500; }
+.zone-label { font-size: 9px; margin-top: 1px; }
+.zh { background: rgba(226,75,74,.1); }
+.zh .zone-num { color: var(--red); }
+.zh .zone-label { color: #A32D2D; }
+.zm { background: rgba(186,117,23,.1); }
+.zm .zone-num { color: var(--amber); }
+.zm .zone-label { color: var(--amber-dk); }
+.zl { background: rgba(42,110,173,.12); }
+.zl .zone-num { color: var(--teal-300); }
+.zl .zone-label { color: var(--teal-700); }
+
+/* ── CONTAINER 10: TEMPERATURE ANOMALY ── */
+.temp-card { grid-column: 2; }
+.temp-main { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 10px; }
+.temp-val { font-family: var(--font-mono); font-size: 36px; color: var(--amber); }
+.temp-vs { font-size: 11px; color: var(--teal-700); padding-bottom: 6px; }
+.temp-chart-wrap { height: 70px; position: relative; }
+.watch-badge {
+  font-size: 9px; color: var(--amber); background: rgba(186,117,23,.2);
+  padding: 2px 8px; border-radius: 99px; letter-spacing: 0.04em;
+}
+
+/* ── CONTAINER 11: PREDICTIVE ANALYTICS ── */
+.predict-card { grid-column: 1; }
+.forecast-band { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.f-range { font-family: var(--font-mono); font-size: 16px; color: var(--teal-50); }
+.f-conf { font-size: 10px; color: var(--teal-700); }
+.fan-chart-wrap { height: 80px; position: relative; }
+.scenario-badges { display: flex; gap: 6px; margin-top: 8px; }
+.scenario-btn {
+  font-size: 9px; padding: 3px 8px; border-radius: 99px; border: var(--border);
+  background: transparent; color: var(--teal-300); font-family: var(--font-ui); cursor: pointer;
+}
+.scenario-btn.active { background: var(--teal-800); color: var(--teal-100); }
+.assumptions-list { margin-top: 8px; border-top: var(--border); padding-top: 8px; }
+.assumption-item { font-size: 9px; color: var(--teal-700); padding: 2px 0; padding-left: 10px; position: relative; }
+.assumption-item::before { content: '·'; position: absolute; left: 0; color: var(--teal-500); }
+
+/* ── CONTAINER 12: COMPETITIVE INTEL ── */
+.comp-card { grid-column: 2; }
+.producers-grid { display: flex; gap: 8px; margin-bottom: 10px; }
+.producer-item {
+  flex: 1; background: var(--teal-800); border-radius: 8px;
+  padding: 8px 10px; text-align: center;
+}
+.prod-rank { font-size: 9px; color: var(--teal-700); margin-bottom: 3px; }
+.prod-company { font-size: 10px; color: var(--teal-100); font-weight: 500; margin-bottom: 4px; }
+.prod-vol { font-family: var(--font-mono); font-size: 15px; color: var(--teal-50); }
+.prod-unit { font-size: 9px; color: var(--teal-700); }
+.prod-chg { font-family: var(--font-mono); font-size: 10px; color: var(--teal-300); margin-top: 2px; }
+.ma-list { border-top: var(--border); padding-top: 8px; }
+.ma-item { display: flex; align-items: flex-start; gap: 6px; padding: 4px 0; }
+.ma-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-500); margin-top: 3px; flex-shrink: 0; }
+.ma-text { font-size: 10px; color: var(--teal-100); }
+.ma-date { font-size: 9px; color: var(--teal-700); }
+.ma-status { font-size: 8px; color: var(--teal-300); background: rgba(42,110,173,.12); padding: 1px 6px; border-radius: 99px; margin-left: 4px; }
+
+/* ── CONTAINER 13: NEWS FEED ── */
+.news-card { grid-column: 1 / -1; }
+.news-items { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+.news-item {
+  padding: 10px 14px; border-right: var(--border);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.news-item:last-child { border-right: none; }
+.news-icon { font-size: 16px; margin-bottom: 2px; }
+.news-source { font-size: 9px; color: var(--teal-700); }
+.news-headline { font-size: 11px; color: var(--teal-100); line-height: 1.4; }
+.news-age { font-size: 9px; color: var(--teal-700); margin-top: auto; }
+.news-link {
+  color: var(--teal-100); text-decoration: none; font-size: 11px;
+  line-height: 1.4; display: block;
+}
+.news-link:hover { color: var(--teal-300); text-decoration: underline; }
+.news-tag {
+  display: inline-block; font-size: 8px; padding: 1px 6px; border-radius: 99px; width: fit-content;
+}
+.tag-positive { background: rgba(42,110,173,.20); color: var(--teal-300); }
+.tag-warning  { background: rgba(186,117,23,.15);  color: var(--amber); }
+.tag-neutral  { background: rgba(136,135,128,.15); color: var(--gray-lt); }
+
+</style>
 </head>
 <body>
-  <h1>International Crab Market Report – May 2026</h1>
 
-  <div class="section">
-    <div class="brief">
-      <strong>Subtitle:</strong> Global crab pricing, supply conditions, and export flows across North America, Russia, and Asia.
-    </div>
-    <div class="brief" style="margin-top:15px;">
-      The global crab market entered May with tight supply conditions and steady demand across Asia and North America.
-      Russian supply remains constrained by quota pacing and logistical bottlenecks, while North American producers
-      continue to face mixed harvest conditions. Asian buyers remain selective but active, with premium grades
-      maintaining strong pricing.
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Key Market Metrics</h2>
-    <div class="metric-grid">
-      <div class="metric">
-        <div class="metric-title">Export Volume</div>
-        <div class="metric-value">Down 1.9% MoM</div>
-        <div class="brief">Slight softening in shipments as harvest variability and logistics delays limit available export volume.</div>
-      </div>
-      <div class="metric">
-        <div class="metric-title">Average Price</div>
-        <div class="metric-value">$14.72/kg</div>
-        <div class="brief">Mixed species basket; firm pricing supported by constrained supply and steady Asian demand.</div>
-      </div>
-      <div class="metric">
-        <div class="metric-title">Year-over-Year Change</div>
-        <div class="metric-value">+3.4% YoY</div>
-        <div class="brief">Moderate upward trend versus last year, driven by tighter supply and resilient premium demand.</div>
+<!-- ══════════════════════════════════════════════
+     HEADER (Container 1 — ticker + nav)
+══════════════════════════════════════════════ -->
+<div class="awmi-header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">🐟</div>
+      <div>
+        <div class="brand-name">Adrian Willanger Market Intelligence</div>
+        <div class="brand-title">Global Salmon Intelligence</div>
       </div>
     </div>
-  </div>
-
-  <div class="section">
-    <h2>Export Flow Summary</h2>
-    <div class="brief">
-      North American exports softened slightly due to variable harvests and weather‑related delays. Russian shipments
-      remained below historical averages, supporting firm pricing in key Asian markets. China and South Korea maintained
-      steady import activity, while Japan increased purchases of premium grades to replenish inventories.
-    </div>
-    <div class="chart-placeholder"></div>
-  </div>
-
-  <div class="section">
-    <h2>Pricing Trends</h2>
-    <div class="brief">
-      Pricing remained firm across most crab categories. Snow crab prices held steady due to limited supply, while king
-      crab pricing showed mild upward pressure. Blue crab pricing was stable, supported by consistent retail demand.
-      Freight costs remain a secondary factor but have not significantly impacted landed prices.
-    </div>
-    <div class="chart-placeholder"></div>
-  </div>
-
-  <div class="section">
-    <h2>Species Notes</h2>
-    <div class="brief">
-      • Snow Crab: Limited supply; firm pricing.<br>
-      • King Crab: Mild upward pressure; premium grades strong.<br>
-      • Blue Crab: Stable demand; consistent retail movement.<br>
-      • Dungeness: Regional variability; pricing supported by tight supply.
+    <div class="header-right">
+      <div class="header-meta">
+        <div class="meta-period">Week 19 · May 4–10, 2026 &nbsp;|&nbsp; Confidential</div>
+        <div class="meta-email">✉ <a href="mailto:Adrian@AdrianWillanger.com">Adrian@AdrianWillanger.com</a></div>
+        <div class="meta-update"><span class="live-dot"></span>Last update 08:36 AM</div>
+      </div>
+      <div class="hdr-actions">
+        <button class="hdr-btn">🔔 Alerts <span class="badge">3</span></button>
+        <button class="hdr-btn">⚙ Settings</button>
+        <a href="https://adrianwillanger-cyber.github.io/GlobalLSalmonLanding/"
+           target="_blank" rel="noopener"
+           class="for-sale-btn">
+          <span class="for-sale-pulse"></span>
+          <span class="for-sale-icon">🐟</span>
+          <span class="for-sale-text">
+            <span class="for-sale-label">Dashboard For Sale</span>
+            <span class="for-sale-sub">Custom builds available →</span>
+          </span>
+        </a>
+      </div>
     </div>
   </div>
+  <div class="ticker-bar">
+    <div class="ticker-label">Live prices</div>
+    <div class="ticker-items">
+      <div class="ticker-item">
+        <div class="t-name">Norway — Atlantic Salmon</div>
+        <div class="t-price"><span class="t-cur" style="color:var(--teal-300)">NOK</span>82.58</div>
+        <div class="t-chg down">▼ −1.1% 24h</div>
+      </div>
+      <div class="ticker-item">
+        <div class="t-name">Chile — Atl. 72% · Coho 23%</div>
+        <div class="t-price" style="color:var(--coral)"><span class="t-cur" style="color:var(--coral)">USD</span>6.20</div>
+        <div class="t-chg down">▼ −0.5% 24h</div>
+      </div>
+      <div class="ticker-item">
+        <div class="t-name">Scotland avg</div>
+        <div class="t-price" style="color:var(--purple)"><span class="t-cur" style="color:var(--purple)">GBP</span>7.80</div>
+        <div class="t-chg flat">— +0.0% 24h</div>
+      </div>
+      <div class="ticker-item">
+        <div class="t-name">Canada avg</div>
+        <div class="t-price" style="color:var(--amber)"><span class="t-cur" style="color:var(--amber)">CAD</span>8.50</div>
+        <div class="t-chg up">▲ +0.3% 24h</div>
+      </div>
+      <div class="ticker-item">
+        <div class="t-name">Global avg</div>
+        <div class="t-price"><span class="t-cur" style="color:var(--teal-300)">USD</span>6.85</div>
+        <div class="t-chg up">▲ +1.2% 24h</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div class="nav-item active" data-tab="overview">Overview</div>
+    <div class="nav-item" data-tab="prices">Prices</div>
+    <div class="nav-item" data-tab="supply">Supply</div>
+    <div class="nav-item" data-tab="export markets">Export markets</div>
+    <div class="nav-item" data-tab="environmental">Environmental</div>
+    <div class="nav-item" data-tab="forecasts">Forecasts</div>
+    <div class="nav-item" data-tab="competitive">Competitive</div>
+    <div class="nav-item" data-tab="resources">Resources</div>
+    <div class="nav-spacer"></div>
+    <div class="conf-tag">🔒 Confidential v1.0</div>
+  </div>
+</div>
 
-  <div class="section">
-    <h2>Risks and Opportunities</h2>
-    <div class="brief">
-      Risks include geopolitical uncertainty affecting Russian supply, variable North American harvest conditions, and
-      potential freight volatility. Opportunities include strong Asian demand for premium grades and stable retail
-      interest in mid‑priced crab categories.
+<script>
+/* ── Tab switching (runs independently of Chart.js) ── */
+(function () {
+  function initTabs() {
+    var navItems = document.querySelectorAll('.nav-item[data-tab]');
+    var cards    = document.querySelectorAll('.dash-grid [data-tabs]');
+    function showTab(tab) {
+      cards.forEach(function(card) {
+        var tabs = card.getAttribute('data-tabs').split(',');
+        var show = false;
+        for (var i = 0; i < tabs.length; i++) {
+          if (tabs[i].trim() === tab) { show = true; break; }
+        }
+        card.style.display = show ? '' : 'none';
+      });
+    }
+    navItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        navItems.forEach(function(n) { n.classList.remove('active'); });
+        item.classList.add('active');
+        showTab(item.getAttribute('data-tab'));
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTabs);
+  } else {
+    initTabs();
+  }
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════
+     MAIN GRID
+══════════════════════════════════════════════ -->
+<div class="dash-grid">
+
+  <!-- ── Container 2: 30-Day Price Chart ── -->
+  <div class="card price-chart-card" data-tabs="overview,prices">
+    <div class="card-header">
+      <span class="card-title">30-day multi-origin price trends</span>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="font-size:9px;color:var(--teal-300)">▲ Norway · Atlantic Salmon (Salmo salar)</span>
+        <span style="font-size:9px;color:var(--coral)">▼ Chile · Atl. 72% / Coho 23% (O. kisutch)</span>
+        <span style="font-size:9px;color:var(--purple)">— Scotland · Atlantic Salmon</span>
+        <span style="font-size:9px;color:var(--amber)">▲ Canada · Atlantic Salmon</span>
+        <span class="card-badge" style="background:rgba(42,110,173,.20);color:var(--teal-300)">
+          <span class="live-dot"></span>Live
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap">
+        <canvas id="priceChart"></canvas>
+      </div>
     </div>
   </div>
 
-  <div class="section">
-    <h2>Summary</h2>
-    <div class="brief">
-      The international crab market remains supply‑tight with firm pricing. Asian demand continues to support premium
-      categories, while North American and Russian supply constraints maintain upward pressure on global prices.
+  <!-- ── Container 3: Supply Status ── -->
+  <div class="card supply-card" data-tabs="overview,supply">
+    <div class="card-header">
+      <span class="card-title">Supply status</span>
+      <span class="card-badge" style="background:rgba(42,110,173,.20);color:var(--teal-300)">Tight</span>
+    </div>
+    <div class="card-body">
+      <div class="big-stat">
+        <div class="big-label">Norway biomass · <em style="color:var(--teal-500);font-style:normal">Salmo salar</em></div>
+        <div><span class="big-num">1,520</span><span class="big-unit">K tonnes</span></div>
+        <span class="change-pill pill-up">▲ +7.0% YoY</span>
+      </div>
+      <hr class="divider">
+      <div class="big-stat">
+        <div class="big-label">Global supply</div>
+        <div><span class="big-num">3,150</span><span class="big-unit">K tonnes</span></div>
+        <span class="change-pill pill-up">▲ +5.8% YoY</span>
+      </div>
+      <hr class="divider">
+      <div class="big-stat">
+        <div class="big-label">Fresh price (Wk 19)</div>
+        <div><span class="big-num" style="font-size:18px">82.58</span><span class="big-unit">NOK/kg</span></div>
+        <span class="change-pill pill-up">▲ +24% WoW</span>
+      </div>
+      <hr class="divider">
+      <div class="tightness-row">
+        <div>
+          <div class="tightness-label">Tightness index</div>
+          <div class="tightness-val">1.12</div>
+          <div style="font-size:9px;color:var(--teal-700)">Demand > Supply</div>
+        </div>
+        <span class="tight-badge">TIGHT MARKET</span>
+      </div>
+      <hr class="divider">
+      <div style="background:rgba(186,117,23,.10);border:0.5px solid var(--amber);border-radius:6px;padding:8px 10px;margin-top:4px">
+        <div style="font-size:9px;color:var(--amber);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:4px">&#9888; Wild Pacific Supply Alert</div>
+        <div style="font-size:9px;color:var(--teal-100);line-height:1.5">
+          Alaska 2026 forecast: <strong style="color:var(--amber)">121.4M fish</strong> &mdash; down <strong style="color:var(--coral)">38%</strong> vs 197.4M in 2025.<br>
+          Pink salmon collapses to <strong style="color:var(--coral)">8.1M</strong> (even-year cycle; was 64.1M). Bristol Bay sockeye: <strong>62.9M</strong>.<br>
+          Wild supply tightening amplifies farmed Atlantic demand in H2 2026.
+        </div>
+        <div style="font-size:8px;color:var(--teal-700);margin-top:5px">Source: ADF&amp;G Special Publication No. 26-08 &middot; April 2026</div>
+      </div>
     </div>
   </div>
+
+  <!-- ── Container 4: Market Sentiment ── -->
+  <div class="card sentiment-card" data-tabs="overview">
+    <div class="card-header">
+      <span class="card-title">Market sentiment</span>
+      <span class="card-badge" style="background:rgba(42,110,173,.20);color:var(--teal-300)">Bullish · Improving</span>
+    </div>
+    <div class="card-body">
+      <div class="score-row">
+        <div>
+          <div style="font-size:10px;color:var(--teal-700);margin-bottom:2px">Overall score</div>
+          <span class="bull-label">BULLISH</span>
+        </div>
+        <div style="text-align:right">
+          <div class="score-num">72</div>
+          <div class="score-sub">/ 100</div>
+        </div>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-bar"><div class="gauge-fill" style="width:72%"></div></div>
+        <div class="gauge-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
+      </div>
+      <div class="factor-list" style="margin-top:10px">
+        <div style="font-size:9px;color:var(--teal-700);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Contributing factors</div>
+        <div class="factor-item">
+          <div class="factor-dot" style="background:var(--teal-500)"></div>
+          Norway price momentum −1.1%
+        </div>
+        <div class="factor-item">
+          <div class="factor-dot" style="background:var(--teal-500)"></div>
+          Supply tightness index 1.12
+        </div>
+        <div class="factor-item">
+          <div class="factor-dot" style="background:var(--teal-300)"></div>
+          China export surge +25%
+        </div>
+        <div class="factor-item">
+          <div class="factor-dot" style="background:var(--coral)"></div>
+          Mid-Norway lice 4.6/5.0
+        </div>
+        <div class="factor-item">
+          <div class="factor-dot" style="background:var(--teal-500)"></div>
+          Contango forward structure
+        </div>
+      </div>
+      <div class="news-row">
+        <div class="news-stat">
+          <div class="news-num">78%</div>
+          <div class="news-label">News positive</div>
+        </div>
+        <div class="news-stat">
+          <div class="news-num" style="color:var(--gray-lt)">Neutral</div>
+          <div class="news-label">Social sentiment</div>
+        </div>
+        <div class="news-stat">
+          <div class="news-num" style="color:var(--teal-300)">↑</div>
+          <div class="news-label">Trend</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 5: Risk Alert ── -->
+  <div class="card risk-card" data-tabs="overview,environmental">
+    <div class="card-header">
+      <span class="card-title">Risk alert</span>
+      <span class="card-badge" style="background:rgba(186,117,23,.15);color:var(--amber)">MEDIUM</span>
+    </div>
+    <div class="card-body">
+      <div class="risk-overall">
+        <div class="risk-circle">
+          <div style="text-align:center">
+            <div class="risk-med">MED</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--teal-100)">Overall risk</div>
+          <div style="font-size:9px;color:var(--teal-700)">2 of 3 metrics elevated</div>
+        </div>
+      </div>
+
+      <div class="risk-item">
+        <div>
+          <div class="risk-key">Sea lice</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar"><div class="risk-bar-fill" style="width:76%;background:var(--amber)"></div></div>
+          </div>
+          <div class="disease-types">Score 3.8 / 5.0</div>
+        </div>
+        <div class="risk-val r-amber">3.8</div>
+      </div>
+      <hr class="divider">
+      <div class="risk-item">
+        <div>
+          <div class="risk-key">Disease alerts</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar"><div class="risk-bar-fill" style="width:80%;background:var(--red)"></div></div>
+          </div>
+          <div class="disease-types">4 active · 2 PD · 1 ILA</div>
+        </div>
+        <div class="risk-val r-red">4</div>
+      </div>
+      <hr class="divider">
+      <div class="risk-item">
+        <div>
+          <div class="risk-key">Weather</div>
+          <div class="risk-bar-wrap">
+            <div class="risk-bar"><div class="risk-bar-fill" style="width:30%;background:var(--teal-500)"></div></div>
+          </div>
+          <div class="disease-types">+0.6°C anomaly · Status OK</div>
+        </div>
+        <div class="risk-val r-green">OK</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 6: Top Export Markets ── -->
+  <div class="card export-card" data-tabs="overview,export markets">
+    <div class="card-header">
+      <span class="card-title">Top export markets</span>
+      <span style="font-size:9px;color:var(--teal-700)">47 markets total</span>
+    </div>
+    <div class="card-body" style="padding:8px 14px">
+      <div class="market-item">
+        <span class="m-flag">PL</span>
+        <span class="m-country">Poland</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:100%"></div></div></div>
+        <span class="m-vol">19.5K</span>
+        <span class="m-chg up">+7%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">FR</span>
+        <span class="m-country">France</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:83%"></div></div></div>
+        <span class="m-vol">16.2K</span>
+        <span class="m-chg up">+6%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">US</span>
+        <span class="m-country">USA <span class="tariff-flag">TARIFF</span></span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:76%"></div></div></div>
+        <span class="m-vol">14.8K</span>
+        <span class="m-chg up">+19%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">CN</span>
+        <span class="m-country">China</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:62%"></div></div></div>
+        <span class="m-vol">12.1K</span>
+        <span class="m-chg up">+25%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">DK</span>
+        <span class="m-country">Denmark</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:52%"></div></div></div>
+        <span class="m-vol">10.2K</span>
+        <span class="m-chg up">+4%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">GB</span>
+        <span class="m-country">UK</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:49%"></div></div></div>
+        <span class="m-vol">9.5K</span>
+        <span class="m-chg up">+2%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">JP</span>
+        <span class="m-country">Japan</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:40%"></div></div></div>
+        <span class="m-vol">7.8K</span>
+        <span class="m-chg up">+9%</span>
+      </div>
+      <div class="market-item">
+        <span class="m-flag">KR</span>
+        <span class="m-country">S. Korea</span>
+        <div class="m-bar-wrap"><div class="m-bar"><div class="m-bar-fill" style="width:21%;background:var(--amber)"></div></div></div>
+        <span class="m-vol">4.1K</span>
+        <span class="m-chg up" style="color:var(--amber)">+32%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 7: Trade Flow Map ── -->
+  <div class="card trade-card" data-tabs="overview,supply,export markets">
+    <div class="card-header">
+      <span class="card-title">Trade flow map — Norway exports</span>
+      <span style="font-size:9px;color:var(--teal-700)">Line thickness = volume · Color = growth</span>
+    </div>
+    <div class="card-body">
+      <svg viewBox="0 0 460 200" class="map-svg-wrap" style="height:180px">
+        <!-- simplified world landmass outlines -->
+        <rect width="460" height="200" fill="#142a47" rx="6"/>
+        <!-- Europe -->
+        <ellipse cx="220" cy="72" rx="38" ry="28" fill="#1e4070" opacity=".7"/>
+        <!-- North America -->
+        <ellipse cx="100" cy="80" rx="55" ry="40" fill="#1e4070" opacity=".7"/>
+        <!-- Asia -->
+        <ellipse cx="340" cy="75" rx="60" ry="35" fill="#1e4070" opacity=".7"/>
+        <!-- Africa -->
+        <ellipse cx="218" cy="140" rx="30" ry="35" fill="#1e4070" opacity=".5"/>
+        <!-- South America -->
+        <ellipse cx="118" cy="150" rx="25" ry="35" fill="#1e4070" opacity=".5"/>
+
+        <!-- Norway origin -->
+        <circle cx="218" cy="52" r="6" fill="var(--teal-300)" opacity=".9"/>
+        <text x="218" y="44" text-anchor="middle" font-size="8" fill="var(--teal-100)" font-family="IBM Plex Mono, monospace">NO</text>
+
+        <!-- Flow lines: thickness = volume, color = growth -->
+        <!-- Poland (thick, green) -->
+        <line x1="218" y1="52" x2="230" y2="68" stroke="var(--teal-300)" stroke-width="4" opacity=".8"/>
+        <circle cx="230" cy="68" r="4" fill="var(--teal-300)"/>
+        <text x="238" y="72" font-size="7" fill="var(--teal-100)" font-family="IBM Plex Mono, monospace">PL +7%</text>
+
+        <!-- France -->
+        <line x1="218" y1="52" x2="208" y2="74" stroke="var(--teal-300)" stroke-width="3.5" opacity=".8"/>
+        <circle cx="208" cy="74" r="3.5" fill="var(--teal-300)"/>
+        <text x="184" y="78" font-size="7" fill="var(--teal-100)" font-family="IBM Plex Mono, monospace">FR +6%</text>
+
+        <!-- USA (tariff amber) -->
+        <line x1="218" y1="52" x2="108" y2="78" stroke="var(--amber)" stroke-width="3.5" opacity=".7"/>
+        <circle cx="108" cy="78" r="4" fill="var(--amber)"/>
+        <text x="60" y="72" font-size="7" fill="var(--amber)" font-family="IBM Plex Mono, monospace">US +19%⚑</text>
+
+        <!-- China (fast growing) -->
+        <line x1="218" y1="52" x2="348" y2="72" stroke="var(--teal-300)" stroke-width="3" opacity=".8"/>
+        <circle cx="348" cy="72" r="4" fill="var(--teal-300)"/>
+        <text x="354" y="68" font-size="7" fill="var(--teal-100)" font-family="IBM Plex Mono, monospace">CN +25%</text>
+
+        <!-- Denmark -->
+        <line x1="218" y1="52" x2="222" y2="60" stroke="var(--teal-500)" stroke-width="2.5" opacity=".7"/>
+        <circle cx="222" cy="60" r="3" fill="var(--teal-500)"/>
+        <text x="228" y="59" font-size="7" fill="var(--teal-700)" font-family="IBM Plex Mono, monospace">DK</text>
+
+        <!-- UK -->
+        <line x1="218" y1="52" x2="202" y2="64" stroke="var(--teal-500)" stroke-width="2.5" opacity=".7"/>
+        <circle cx="202" cy="64" r="3" fill="var(--teal-500)"/>
+        <text x="185" y="62" font-size="7" fill="var(--teal-700)" font-family="IBM Plex Mono, monospace">GB</text>
+
+        <!-- Japan -->
+        <line x1="218" y1="52" x2="382" y2="68" stroke="var(--teal-500)" stroke-width="2" opacity=".7"/>
+        <circle cx="382" cy="68" r="3" fill="var(--teal-500)"/>
+        <text x="386" y="76" font-size="7" fill="var(--teal-700)" font-family="IBM Plex Mono, monospace">JP +9%</text>
+
+        <!-- S Korea -->
+        <line x1="218" y1="52" x2="370" y2="78" stroke="var(--teal-300)" stroke-width="1.5" opacity=".7"/>
+        <circle cx="370" cy="78" r="2.5" fill="var(--teal-300)"/>
+        <text x="372" y="86" font-size="7" fill="var(--teal-100)" font-family="IBM Plex Mono, monospace">KR +32%</text>
+      </svg>
+      <div class="map-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--teal-300)"></div>Growth</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--teal-500)"></div>Stable</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>Tariff risk</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 8: Forward Curve ── -->
+  <div class="card forward-card" data-tabs="overview,prices,forecasts">
+    <div class="card-header">
+      <span class="card-title">Forward curve</span>
+      <span class="contango-badge">CONTANGO</span>
+    </div>
+    <div class="card-body">
+      <div class="spot-row">
+        <span class="spot-label">Spot (Norway)</span>
+        <span class="spot-price">NOK 82.58</span>
+      </div>
+      <div class="curve-items">
+        <div class="curve-item">
+          <span class="c-tenor">1M</span>
+          <div class="c-bar-wrap"><div class="c-bar"><div class="c-bar-fill" style="width:94%"></div></div></div>
+          <div style="text-align:right">
+            <div class="c-price">83.25</div>
+            <div class="c-spread up">+0.67</div>
+          </div>
+        </div>
+        <div class="curve-item">
+          <span class="c-tenor">3M</span>
+          <div class="c-bar-wrap"><div class="c-bar"><div class="c-bar-fill" style="width:95%"></div></div></div>
+          <div style="text-align:right">
+            <div class="c-price">84.20</div>
+            <div class="c-spread up">+1.62</div>
+          </div>
+        </div>
+        <div class="curve-item">
+          <span class="c-tenor">6M</span>
+          <div class="c-bar-wrap"><div class="c-bar"><div class="c-bar-fill" style="width:98%"></div></div></div>
+          <div style="text-align:right">
+            <div class="c-price">86.90</div>
+            <div class="c-spread up">+4.32</div>
+          </div>
+        </div>
+        <div class="curve-item">
+          <span class="c-tenor">12M</span>
+          <div class="c-bar-wrap"><div class="c-bar"><div class="c-bar-fill" style="width:100%;background:var(--teal-300)"></div></div></div>
+          <div style="text-align:right">
+            <div class="c-price" style="color:var(--teal-100)">89.50</div>
+            <div class="c-spread up">+6.92</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;border-top:var(--border);padding-top:8px;font-size:9px;color:var(--teal-700)">
+        Structure: Bullish · Source: Fish Pool ASA
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 9: Environmental / Sea Lice ── -->
+  <div class="card env-card" data-tabs="environmental" style="display:none">
+    <div class="card-header">
+      <span class="card-title">Environmental monitoring</span>
+      <span class="card-badge" style="background:rgba(186,117,23,.15);color:var(--amber)">ELEVATED RISK</span>
+    </div>
+    <div class="card-body">
+      <div style="font-size:9px;color:var(--teal-700);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase">Sea lice pressure (Norway)</div>
+      <div class="lice-regions">
+        <div class="lice-region">
+          <span class="lice-name">North</span>
+          <div class="lice-bar-wrap">
+            <div class="lice-bar"><div class="lice-bar-fill" style="width:56%;background:var(--teal-500)"></div></div>
+          </div>
+          <span class="lice-score" style="color:var(--teal-300)">2.8/5.0</span>
+        </div>
+        <div class="lice-region">
+          <span class="lice-name">Mid</span>
+          <div class="lice-bar-wrap">
+            <div class="lice-bar"><div class="lice-bar-fill" style="width:92%;background:var(--red)"></div></div>
+          </div>
+          <span class="lice-score" style="color:var(--red)">4.6/5.0</span>
+        </div>
+        <div class="lice-region">
+          <span class="lice-name">South</span>
+          <div class="lice-bar-wrap">
+            <div class="lice-bar"><div class="lice-bar-fill" style="width:70%;background:var(--amber)"></div></div>
+          </div>
+          <span class="lice-score" style="color:var(--amber)">3.5/5.0</span>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--teal-700);margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase">Traffic light zones</div>
+      <div class="zone-grid">
+        <div class="zone-box zh"><div class="zone-num">1</div><div class="zone-label">HIGH</div></div>
+        <div class="zone-box zm"><div class="zone-num">9</div><div class="zone-label">MODERATE</div></div>
+        <div class="zone-box zl"><div class="zone-num">3</div><div class="zone-label">LOW</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--teal-700)">Disease alerts: 4 active · 2 PD · 1 ILA · Source: Mattilsynet / BarentsWatch</div>
+    </div>
+  </div>
+
+  <!-- ── Container 10: Temperature Anomaly ── -->
+  <div class="card temp-card" data-tabs="environmental" style="display:none">
+    <div class="card-header">
+      <span class="card-title">Temperature anomaly</span>
+      <span class="watch-badge">WATCH</span>
+    </div>
+    <div class="card-body">
+      <div class="temp-main">
+        <div class="temp-val">+0.6°C</div>
+        <div class="temp-vs">vs seasonal normal</div>
+      </div>
+      <div class="temp-chart-wrap">
+        <canvas id="tempChart"></canvas>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--teal-700)">
+        Warming trend April–May 2026 · Source: IMR / BarentsWatch
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 11: Predictive Analytics ── -->
+  <div class="card predict-card" data-tabs="forecasts" style="display:none">
+    <div class="card-header">
+      <span class="card-title">3-month price forecast</span>
+      <span class="card-badge" style="background:rgba(42,110,173,.20);color:var(--teal-300)">75% confidence</span>
+    </div>
+    <div class="card-body">
+      <div class="forecast-band">
+        <div>
+          <div style="font-size:9px;color:var(--teal-700)">Expected range</div>
+          <div class="f-range">NOK 83–87</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:var(--teal-700)">Historical accuracy</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--teal-100)">75%</div>
+        </div>
+      </div>
+      <div class="fan-chart-wrap">
+        <canvas id="fanChart"></canvas>
+      </div>
+      <div class="scenario-badges">
+        <button class="scenario-btn active">Base</button>
+        <button class="scenario-btn">Bull</button>
+        <button class="scenario-btn">Bear</button>
+      </div>
+      <div class="assumptions-list">
+        <div style="font-size:9px;color:var(--teal-700);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Key assumptions</div>
+        <div class="assumption-item">Norway biomass growth +7% YoY continues</div>
+        <div class="assumption-item">China demand maintains momentum</div>
+        <div class="assumption-item">US tariff situation unchanged</div>
+        <div class="assumption-item">Lice pressure does not escalate</div>
+        <div class="assumption-item">No new ILA/PD outbreaks in core zones</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 12: Competitive Intel ── -->
+  <div class="card comp-card" data-tabs="competitive,forecasts" style="display:none">
+    <div class="card-header">
+      <span class="card-title">Competitive intelligence — Q1 2026</span>
+      <span style="font-size:9px;color:var(--teal-700)">Oslo Børs listed</span>
+    </div>
+    <div class="card-body">
+      <div style="font-size:9px;color:var(--teal-700);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase">Top producers</div>
+      <div class="producers-grid">
+        <div class="producer-item">
+          <div class="prod-rank">#1</div>
+          <div class="prod-company">Mowi ASA</div>
+          <div class="prod-vol">385<span class="prod-unit">K t</span></div>
+          <div class="prod-chg">▲ +3.2%</div>
+        </div>
+        <div class="producer-item">
+          <div class="prod-rank">#2</div>
+          <div class="prod-company">SalMar ASA</div>
+          <div class="prod-vol">112<span class="prod-unit">K t</span></div>
+          <div class="prod-chg">▲ +8.7%</div>
+        </div>
+        <div class="producer-item">
+          <div class="prod-rank">#3</div>
+          <div class="prod-company">Lerøy</div>
+          <div class="prod-vol">58<span class="prod-unit">K t</span></div>
+          <div class="prod-chg">▲ +2.1%</div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--teal-700);margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase">Recent M&amp;A activity</div>
+      <div class="ma-list">
+        <div class="ma-item">
+          <div class="ma-dot"></div>
+          <div>
+            <div class="ma-text">Mowi acquires... <span class="ma-status">announced</span></div>
+            <div class="ma-date">May 10, 2026 · Source: Mowi IR</div>
+          </div>
+        </div>
+        <div class="ma-item">
+          <div class="ma-dot" style="background:var(--amber)"></div>
+          <div>
+            <div class="ma-text">SalMar expands... <span class="ma-status">announced</span></div>
+            <div class="ma-date">May 8, 2026 · Source: SalMar IR</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;border-top:var(--border);padding-top:8px">
+        <div style="font-size:9px;color:var(--teal-700);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Kontali 2026 production forecast</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--teal-50)">1.48M <span style="font-size:11px;color:var(--teal-700)">tonnes Norway</span></div>
+        <div style="font-size:9px;color:var(--teal-300)">Raised 5h ago · Source: Kontali Analyse</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Container 13: Latest Intelligence / News Feed ── -->
+  <div class="card news-card" data-tabs="overview,supply">
+    <div class="card-header">
+      <span class="card-title">Latest intelligence</span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:9px;color:var(--teal-700)">Reverse chronological · 5 items · Click headline to open source</span>
+        <span style="font-size:9px;background:rgba(93,202,165,.1);color:var(--teal-300);padding:2px 8px;border-radius:99px;">🔗 All articles linked</span>
+      </div>
+    </div>
+    <div class="news-items">
+      <div class="news-item" style="background:rgba(186,117,23,.06)">
+        <div class="news-icon">&#128031;</div>
+        <div class="news-source">ADF&amp;G &middot; <em style="color:var(--amber);font-style:normal">Wild Pacific Salmon</em></div>
+        <a href="http://www.adfg.alaska.gov/sf/publications/" target="_blank" rel="noopener"
+           class="news-headline news-link">Alaska 2026 forecast: 121.4M fish, &minus;38% &mdash; pink collapses to 8.1M (even-year cycle)</a>
+        <span class="news-tag" style="background:rgba(186,117,23,.15);color:var(--amber)">Supply Risk</span>
+        <div class="news-age">Apr 2026 &middot; ADF&amp;G Pub. 26-08 &#8599;</div>
+      </div>
+      <div class="news-item">
+        <div class="news-icon">📰</div>
+        <div class="news-source">IntraFish · <em style="color:var(--teal-700);font-style:normal">Atlantic Salmon (Salmo salar)</em></div>
+        <a href="https://www.intrafish.com/salmon/norwegian-exports-to-china-surge-in-may/2-1-1643721"
+           target="_blank" rel="noopener"
+           class="news-headline news-link">Norwegian exports to China surge 25% in May</a>
+        <span class="news-tag tag-positive">Positive</span>
+        <div class="news-age">2h ago · IntraFish ↗</div>
+      </div>
+      <div class="news-item">
+        <div class="news-icon">📊</div>
+        <div class="news-source">Kontali Analyse · <em style="color:var(--teal-700);font-style:normal">All origins</em></div>
+        <a href="https://www.kontali.no/en/news"
+           target="_blank" rel="noopener"
+           class="news-headline news-link">Kontali raises 2026 Norwegian forecast to 1.48M tonnes</a>
+        <span class="news-tag tag-positive">Positive</span>
+        <div class="news-age">5h ago · Kontali.no ↗</div>
+      </div>
+      <div class="news-item">
+        <div class="news-icon">⚠️</div>
+        <div class="news-source">BarentsWatch · <em style="color:var(--teal-700);font-style:normal">Atlantic Salmon (Salmo salar)</em></div>
+        <a href="https://www.barentswatch.no/en/fishhealth/"
+           target="_blank" rel="noopener"
+           class="news-headline news-link">Mid-Norway lice levels reach seasonal peak</a>
+        <span class="news-tag tag-warning">Warning</span>
+        <div class="news-age">8h ago · BarentsWatch ↗</div>
+      </div>
+      <div class="news-item">
+        <div class="news-icon">📋</div>
+        <div class="news-source">Mowi ASA IR · <em style="color:var(--teal-700);font-style:normal">Atlantic Salmon (Salmo salar)</em></div>
+        <a href="https://mowi.com/investors/reports-and-presentations/"
+           target="_blank" rel="noopener"
+           class="news-headline news-link">Mowi Q2 guidance: 110K tonnes Atlantic salmon harvest expected</a>
+        <span class="news-tag tag-neutral">Neutral</span>
+        <div class="news-age">1d ago · Mowi.com ↗</div>
+      </div>
+    </div>
+    <!-- Species key -->
+    <div style="padding:8px 14px;border-top:var(--border);display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase">Species key:</span>
+      <span style="font-size:9px;color:var(--teal-300)">🟢 Norway · Atlantic Salmon <em>(Salmo salar)</em> — 100% of harvest</span>
+      <span style="font-size:9px;color:var(--coral)">🔴 Chile · Atlantic Salmon 72% + Coho <em>(Oncorhynchus kisutch)</em> 23% + Trout 5%</span>
+      <span style="font-size:9px;color:var(--purple)">🟣 Scotland · Atlantic Salmon <em>(Salmo salar)</em></span>
+      <span style="font-size:9px;color:var(--amber)">🟡 Canada · Atlantic Salmon <em>(Salmo salar)</em></span>
+    </div>
+  </div>
+
+  <!-- Container 14: Resources -->
+  <div class="card" data-tabs="resources" style="display:none;grid-column:1/-1">
+    <div class="card-header">
+      <span class="card-title">Data sources &amp; resources</span>
+      <span style="font-size:9px;color:var(--teal-700)">All primary sources powering this dashboard</span>
+    </div>
+    <div class="card-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:14px 16px">
+      <div>
+        <div style="font-size:9px;color:var(--teal-500);letter-spacing:.10em;text-transform:uppercase;font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:0.5px solid var(--teal-800)">&#128200; Pricing &amp; Forwards</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Nasdaq Salmon Index (NOS)</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Norway FPI &mdash; daily benchmark price in NOK/kg</div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Fish Pool ASA</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Forward curve: 1M, 3M, 6M, 12M contracts &middot; <a href="https://fishpool.eu" target="_blank" style="color:var(--teal-500);text-decoration:none">fishpool.eu</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Urner Barry</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Global avg USD/lb &middot; US market spot pricing</div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Kontali Analyse</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Chile Index, Scotland Avg, production forecasts &middot; <a href="https://www.kontali.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">kontali.no</a></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--teal-500);letter-spacing:.10em;text-transform:uppercase;font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:0.5px solid var(--teal-800)">&#128682; Supply &amp; Trade</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Norwegian Seafood Council</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Weekly export volumes across 47 destination markets &middot; <a href="https://seafood.no" target="_blank" style="color:var(--teal-500);text-decoration:none">seafood.no</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">SSB &mdash; Statistics Norway</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Official Norwegian export statistics by country &middot; <a href="https://www.ssb.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">ssb.no</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">UN Comtrade / Eurostat</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Bilateral trade flows &mdash; 40+ country pairs</div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Mowi / SalMar / Ler&#248;y IR</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Quarterly harvest guidance and actuals vs. targets</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--teal-500);letter-spacing:.10em;text-transform:uppercase;font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:0.5px solid var(--teal-800)">&#129516; Biological Risk</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Mattilsynet</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Sea lice zone map, disease alerts &middot; <a href="https://www.mattilsynet.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">mattilsynet.no</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">BarentsWatch</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Real-time lice pressure, temperature anomaly by fjord &middot; <a href="https://www.barentswatch.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">barentswatch.no</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">Norwegian Veterinary Institute</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">ILA, PD, AGD outbreak tracking &middot; <a href="https://www.vetinst.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">vetinst.no</a></div></div>
+          <div><div style="font-size:9px;color:var(--teal-100);font-weight:600">IMR &mdash; Institute of Marine Research</div><div style="font-size:8px;color:var(--teal-700);margin-top:1px">Ocean temperature and environmental research &middot; <a href="https://www.hi.no/en" target="_blank" style="color:var(--teal-500);text-decoration:none">hi.no</a></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--amber);letter-spacing:.10em;text-transform:uppercase;font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:0.5px solid var(--amber-dk)">&#128031; Wild Pacific Supply</div>
+        <div style="background:rgba(186,117,23,.08);border:0.5px solid var(--amber-dk);border-radius:5px;padding:8px">
+          <div style="font-size:9px;color:var(--teal-100);font-weight:600">ADF&amp;G &mdash; Alaska Dept. of Fish &amp; Game</div>
+          <div style="font-size:8px;color:var(--teal-700);margin-top:2px;line-height:1.5">Annual salmon harvest forecast &mdash; all species.<br>2026 projection: 121.4M fish (&minus;38% YoY).<br>Bristol Bay sockeye: 62.9M &middot; Pink: 8.1M (even-yr cycle).</div>
+          <div style="font-size:8px;color:var(--amber);margin-top:4px">Special Publication No. 26-08 &middot; April 2026</div>
+          <div style="margin-top:4px"><a href="http://www.adfg.alaska.gov/sf/publications/" target="_blank" style="font-size:8px;color:var(--teal-500);text-decoration:none">adfg.alaska.gov/sf/publications/ &#8599;</a></div>
+          <div style="font-size:8px;color:var(--teal-700);margin-top:2px;font-style:italic">Gleason, C.M. &amp; Munro, A.R. (eds.), 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end dash-grid -->
+
+<script>
+const teal300 = '#5DCAA5';
+const teal500 = '#2a6ead';
+const teal700 = '#1e4070';
+const teal800 = '#142a47';
+const teal50  = '#E1F5EE';
+const coral   = '#F0997B';
+const purple  = '#AFA9EC';
+const amber   = '#FAC775';
+
+Chart.defaults.color = teal700;
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 9;
+
+/* ── Price Chart ── */
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+new Chart(priceCtx, {
+  type: 'line',
+  data: {
+    labels: ['Apr 15','Apr 22','Apr 30','May 7','May 15'],
+    datasets: [
+      {
+        label: 'Norway (NOK)',
+        data: [68.40, 71.20, 75.60, 79.80, 82.58],
+        borderColor: teal300, backgroundColor: 'rgba(93,202,165,.08)',
+        borderWidth: 2, pointRadius: 3, pointBackgroundColor: teal300,
+        tension: 0.4, fill: true
+      },
+      {
+        label: 'Chile (NOK equiv)',
+        data: [78.00, 81.20, 84.50, 86.00, 84.80],
+        borderColor: coral, backgroundColor: 'transparent',
+        borderWidth: 2, pointRadius: 3, pointBackgroundColor: coral,
+        tension: 0.4, fill: false
+      },
+      {
+        label: 'Scotland (NOK equiv)',
+        data: [77.00, 79.00, 82.00, 83.50, 84.00],
+        borderColor: purple, backgroundColor: 'transparent',
+        borderWidth: 1.5, pointRadius: 2, pointBackgroundColor: purple,
+        borderDash: [4,3], tension: 0.4, fill: false
+      },
+      {
+        label: 'Canada (NOK equiv)',
+        data: [76.00, 78.50, 80.00, 82.00, 83.50],
+        borderColor: amber, backgroundColor: 'transparent',
+        borderWidth: 1.5, pointRadius: 2, pointBackgroundColor: amber,
+        borderDash: [2,2], tension: 0.4, fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0d1b2e', borderColor: teal700, borderWidth: 0.5,
+        titleColor: teal300, bodyColor: teal50,
+        callbacks: { label: ctx => ' NOK ' + ctx.parsed.y.toFixed(2) }
+      }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700 } },
+      y: {
+        grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700 },
+        min: 74, max: 100
+      }
+    }
+  }
+});
+
+/* ── Temp Chart ── */
+const tempCtx = document.getElementById('tempChart').getContext('2d');
+new Chart(tempCtx, {
+  type: 'line',
+  data: {
+    labels: ['Apr 15','Apr 22','Apr 30','May 7','May 15'],
+    datasets: [{
+      label: 'Temp anomaly °C',
+      data: [0.1, 0.2, 0.4, 0.5, 0.6],
+      borderColor: amber, backgroundColor: 'rgba(250,199,117,.1)',
+      borderWidth: 2, pointRadius: 3, pointBackgroundColor: amber,
+      tension: 0.4, fill: true
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0d1b2e', borderColor: teal700, borderWidth: 0.5,
+        titleColor: teal300, bodyColor: teal50,
+        callbacks: { label: ctx => '+' + ctx.parsed.y.toFixed(1) + '°C' }
+      }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700, font: { size: 8 } } },
+      y: { grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700, font: { size: 8 } }, min: 0, max: 1 }
+    }
+  }
+});
+
+/* ── Fan Chart ── */
+const fanCtx = document.getElementById('fanChart').getContext('2d');
+new Chart(fanCtx, {
+  type: 'line',
+  data: {
+    labels: ['Now','Jun','Jul','Aug'],
+    datasets: [
+      {
+        label: 'High',
+        data: [84.00, 86.00, 88.00, 90.00],
+        borderColor: 'rgba(93,202,165,.4)', backgroundColor: 'rgba(93,202,165,.08)',
+        borderWidth: 1, borderDash: [3,2], pointRadius: 0, fill: '+1', tension: 0.4
+      },
+      {
+        label: 'Mid',
+        data: [82.58, 83.50, 85.00, 86.20],
+        borderColor: teal300, backgroundColor: 'rgba(93,202,165,.06)',
+        borderWidth: 2, pointRadius: 3, pointBackgroundColor: teal300,
+        fill: false, tension: 0.4
+      },
+      {
+        label: 'Low',
+        data: [81.00, 81.50, 82.00, 82.50],
+        borderColor: 'rgba(93,202,165,.4)', backgroundColor: 'transparent',
+        borderWidth: 1, borderDash: [3,2], pointRadius: 0, tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0d1b2e', borderColor: teal700, borderWidth: 0.5,
+        titleColor: teal300, bodyColor: teal50
+      }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700, font: { size: 8 } } },
+      y: { grid: { color: 'rgba(30,64,112,.3)' }, ticks: { color: teal700, font: { size: 8 } }, min: 93, max: 106 }
+    }
+  }
+});
+
+/* scenario button toggle */
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+</script>
 </body>
 </html>
